@@ -44,6 +44,18 @@ class TasksDB:
             data = list(collection.find({}))
             return data
         except Exception as err:
+            raise ValueError(err)
+            
+        # esto no funciona porque no sirve el id
+    def delete_task(self, collection_name, id):
+        try:
+            collection = self.get_collection(collection_name)
+            collection.delete_one({'_id': id})
+            return
+        except Exception as err:
+            # raise ValueError(err)
             print(err)
-            return ({'msg': 'Ocurrio un problema'})
+            return False
+        
+            
             
