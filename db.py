@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson import ObjectId
 
 class TasksDB:
     def __init__(self):
@@ -46,16 +47,17 @@ class TasksDB:
         except Exception as err:
             raise ValueError(err)
             
-        # esto no funciona porque no sirve el id
+
     def delete_task(self, collection_name, id):
         try:
+            object_id = ObjectId(id)
             collection = self.get_collection(collection_name)
-            collection.delete_one({'_id': id})
-            return
+            resp = collection.delete_one({'_id': object_id})
+            if resp.deleted_count == 0:
+                raise ValueError('Not found')
         except Exception as err:
-            # raise ValueError(err)
-            print(err)
-            return False
+            raise ValueError(err)
+
         
             
             
