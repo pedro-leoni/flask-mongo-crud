@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
+# TODO make tasks schema
 
 class TasksDB:
     def __init__(self):
@@ -8,9 +9,7 @@ class TasksDB:
         # select db in client
         self.db = self.client['TasksDB']
         print('Local database ready')
-        
 
-    
     def get_collection(self, collection_name):
         '''
         to select collection make sure you have inserted
@@ -34,10 +33,8 @@ class TasksDB:
         try:
             collection = self.get_collection(collection_name)
             collection.insert_one(payload)
-            return True
         except Exception as err:
-            print(err)
-            return False
+            raise ValueError(err)
     
     def get_tasks(self, collection_name):
         try:
@@ -46,7 +43,6 @@ class TasksDB:
             return data
         except Exception as err:
             raise ValueError(err)
-            
 
     def delete_task(self, collection_name, id):
         try:
@@ -58,6 +54,12 @@ class TasksDB:
         except Exception as err:
             raise ValueError(err)
 
-        
-            
-            
+    def edit_task(self, collection_name, id, payload):
+        try:
+            object_id = ObjectId(id)
+            collection = self.get_collection(collection_name)
+            resp = collection.find_one_and_update({'_id': object_id}, {'$set': payload})
+            print(resp)
+        except Exception as err:
+            raise ValueError(err)
+
